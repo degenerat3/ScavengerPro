@@ -25,3 +25,7 @@ func (c *CredCache) Add_entry(cred string){
 func (c *CredCache) Count_entries() int{
 	return len(c.Credentials)
 }
+
+func (c *CredCache) Get_hostname() string{
+	return(c.Hostname)
+}
