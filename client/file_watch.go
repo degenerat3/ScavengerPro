@@ -11,21 +11,21 @@ import(
 )
 
 // take file list in form: ["filename:parser" "file2:parser2"...]
-func check_files(files []string){
+func check_files(files []string, c cred_cahe.CredCache){
 	for _,f := range files{
 		if strings.Contains(f, "def"){
 			fmt.Printf("doing default parse\n")
-			default_parse(f)
+			default_parse(f,c)
 		}
 		if strings.Contains(f, "pam"){
 			fmt.Printf("doing PAM parse\n")
-			pam_parse(f)
+			pam_parse(f,c)
 		}
 	}
 }
 
 
-func default_parse(fi string) []string{
+func default_parse(fi string, c cred_cache.CredCache) []string{
 	var res []string
 	fname := strings.Split(fi, ":")[0]
 	fmt.Printf("File name: %s\n", fname)
@@ -43,6 +43,7 @@ func default_parse(fi string) []string{
 		pass := sp[1]
 		fin := typ + ":" + user + ":" + pass
 		res = append(res, fin)
+		c.Add_entry(fin)
 	}
 	fmt.Printf("%s", res)
 	return nil
