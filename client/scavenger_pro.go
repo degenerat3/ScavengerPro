@@ -1,8 +1,7 @@
 package main
-//import "ScavengerPro/client/cred_cache"
+import "ScavengerPro/client/cred_cache"
 import "ScavengerPro/client/file_watch.go"
 import "ScavengerPro/client/shipper.go"
-
 import "fmt"
 import "time"
 import "os"
@@ -29,7 +28,7 @@ func main(){
 	}
 	for{
 		time.Sleep(2)
-		go watch(files, c)
-		go ship(c, min)
+		go watch(files, c)		// "thread" to watch
+		go ship(c, min)			// "thraed" to ship
 	}
 }
