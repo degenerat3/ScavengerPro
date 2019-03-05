@@ -2,10 +2,6 @@
 //@author: degenerat3
 package cred_cache
 
-import (
-	"fmt"
-)
-
 //CredCache is the struct will be the "object" which holds cred info
 type CredCache struct {
 	Hostname    string
@@ -14,7 +10,6 @@ type CredCache struct {
 
 //Get_entries fetches all stored credentials
 func (c *CredCache) Get_entries() []string {
-	fmt.Printf("%s\n", c.Credentials)
 	return c.Credentials
 }
 
