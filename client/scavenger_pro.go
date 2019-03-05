@@ -1,34 +1,33 @@
 package main
+
 import "ScavengerPro/client/cred_cache"
-import "ScavengerPro/client/file_watch.go"
-import "ScavengerPro/client/shipper.go"
 import "fmt"
 import "time"
 import "os"
 
-func watch(files []string, c cred_cache.CredCache){
+func watch(files []string, c cred_cache.CredCache) {
 	fmt.Println("watching")
-	check_files(files)
+	check_files(files, c)
 }
 
-func ship(c cred_cache.CredCache, min int){
+func ship(c cred_cache.CredCache, min int) {
 	fmt.Println("shipping")
-	ship_it(c, min)
+	shipIt(c, min)
 
 }
 
-func main(){
-	files := []string{"filepath:type" "file2:type"}
+func main() {
+	files := []string{"filepath:type", "file2:type"}
 	min := 5
-	h := os.Hostname()
+	h, _ := os.Hostname()
 
-	c := cred_cache.CredCache {
-		Hostname: h,
-		Credentials: []string,
+	c := cred_cache.CredCache{
+		Hostname:    h,
+		Credentials: []string{},
 	}
-	for{
+	for {
 		time.Sleep(2)
-		go watch(files, c)		// "thread" to watch
-		go ship(c, min)			// "thraed" to ship
+		go watch(files, c) // "thread" to watch
+		go ship(c, min)    // "thraed" to ship
 	}
 }

