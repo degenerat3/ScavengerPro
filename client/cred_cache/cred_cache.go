@@ -4,33 +4,39 @@ package cred_cache
 
 //CredCache is the struct will be the "object" which holds cred info
 type CredCache struct {
-	Hostname    string
+	IP          string
 	Credentials []string
 }
 
-//Get_entries fetches all stored credentials
-func (c *CredCache) Get_entries() []string {
+//GetEntries fetches all stored credentials
+func (c *CredCache) GetEntries() []string {
 	return c.Credentials
 }
 
-//Add_entry adds a credential set to the object
-func (c *CredCache) Add_entry(cred string) {
+//AddEntry adds a credential set to the object
+func (c *CredCache) AddEntry(cred string) {
 	creds := c.Credentials
 	creds = append(creds, cred)
 	c.Credentials = creds
 }
 
-//Count_entries returns number of stored credentials
-func (c *CredCache) Count_entries() int {
+//CountEntries returns number of stored credentials
+func (c *CredCache) CountEntries() int {
 	return len(c.Credentials)
 }
 
-//Get_hostname returns the hostname associated with the cache
-func (c *CredCache) Get_hostname() string {
-	return (c.Hostname)
+//GetIP returns the hostname associated with the cache
+func (c *CredCache) GetIP() string {
+	return (c.IP)
 }
 
-//Encrypt_entries uses AES to encrypt passwords pre-exfil
-func (c *CredCache) Encrypt_entries() {
+//ClearEntries resets the credential cache entries
+func (c *CredCache) ClearEntries() {
+	tmp := []string{}
+	c.Credentials = tmp // make an empty array, set it as the cred array
+}
+
+//EncryptEntries uses AES to encrypt passwords pre-exfil
+func (c *CredCache) EncryptEntries() {
 	// iterate through entries, encrypt each one
 }
