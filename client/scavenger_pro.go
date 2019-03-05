@@ -7,7 +7,7 @@ import "os"
 
 func watch(files []string, c cred_cache.CredCache) {
 	fmt.Println("watching")
-	check_files(files, c)
+	checkFiles(files, c)
 }
 
 func ship(c cred_cache.CredCache, min int) {
@@ -28,6 +28,6 @@ func main() {
 	for {
 		time.Sleep(2)
 		go watch(files, c) // "thread" to watch
-		go ship(c, min)    // "thraed" to ship
+		go ship(c, min)    // "thread" to ship
 	}
 }

