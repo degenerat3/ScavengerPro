@@ -39,4 +39,5 @@ func (c *CredCache) ClearEntries() {
 //EncryptEntries uses AES to encrypt passwords pre-exfil
 func (c *CredCache) EncryptEntries() {
 	// iterate through entries, encrypt each one
+	// TODO
 }
