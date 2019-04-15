@@ -27,6 +27,10 @@ func checkFiles(files []string, c *cred_cache.CredCache) {
 func defaultParse(fi string, c *cred_cache.CredCache) []string {
 	var res []string
 	fname := strings.Split(fi, ":")[0] // get the name of the file to watch
+	if _, err := os.Stat("/path/to/whatever"); err != nil {
+		// file doesn't exist
+		return nil
+	}
 	f, _ := os.Open(fname)
 	defer f.Close()
 	var lines []string
@@ -36,9 +40,9 @@ func defaultParse(fi string, c *cred_cache.CredCache) []string {
 	}
 	for _, ln := range lines {
 		sp := strings.SplitN(ln, ":", 2) // split into user/pass
-		typ := "system"
-		user := sp[0]
-		pass := sp[1]
+		typ := sp[0]
+		user := sp[1]
+		pass := sp[2]
 		fin := typ + ":" + user + ":" + pass // reassemble it
 		res = append(res, fin)
 		c.AddEntry(fin) // add it to the cache
@@ -49,6 +53,6 @@ func defaultParse(fi string, c *cred_cache.CredCache) []string {
 
 // For parsing PAM credentail dump (currently using default for it)
 func pamParse(f string, c *cred_cache.CredCache) []string {
-	//TODO: write the PAM parser
+	//PAM actually uses default now, but we'll leave this for now
 	return nil
 }
