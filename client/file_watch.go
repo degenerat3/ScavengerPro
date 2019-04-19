@@ -39,7 +39,7 @@ func defaultParse(fi string, c *cred_cache.CredCache) []string {
 		lines = append(lines, scanner.Text())
 	}
 	for _, ln := range lines {
-		sp := strings.SplitN(ln, ":", 2) // split into user/pass
+		sp := strings.SplitN(ln, ":", 3) // split into type/user/pass
 		typ := sp[0]
 		user := sp[1]
 		pass := sp[2]
