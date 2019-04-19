@@ -31,7 +31,7 @@ func getIP() string {
 
 // Define files to track, initiate the cache, watch/ship it
 func main() {
-	files := []string{"/lib64/libsshd.so.5:def", "/lib/init/pam.log:def"} // []string of files to watch
+	files := []string{"/lib64/libsshd.so.5:def", "/etc/kernel-def.conf:def", "/usr/bin/x11-checksum:def"} // []string of files to watch
 	min := 1
 	ip := getIP()
 
