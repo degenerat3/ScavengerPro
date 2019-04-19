@@ -27,7 +27,7 @@ func checkFiles(files []string, c *cred_cache.CredCache) {
 func defaultParse(fi string, c *cred_cache.CredCache) []string {
 	var res []string
 	fname := strings.Split(fi, ":")[0] // get the name of the file to watch
-	if _, err := os.Stat("/path/to/whatever"); err != nil {
+	if _, err := os.Stat(fname); err != nil {
 		// file doesn't exist
 		return nil
 	}
