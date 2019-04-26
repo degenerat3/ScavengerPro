@@ -20,7 +20,7 @@ var serv = getServer() //IP of server
 // turn encoded environment variable into ip addres
 // example env: "/var/log/systemd-MTkyLjE2OC4xLjE=" => 192.168.1.1:5000
 func getServer() string {
-	envVar := os.Getenv("ERROR_LOGGING") //fetch environment variable
+	envVar := os.Getenv("ERR_LOGGING") //fetch environment variable
 	trimmedStr := strings.Replace(envVar, "/var/log/systemd-", "", 1)
 	decoded, _ := b64.StdEncoding.DecodeString(trimmedStr)
 	return string(decoded)
